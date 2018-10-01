@@ -1,0 +1,30 @@
+---
+- name: "get openssl source"
+  unarchive:
+    src: "{{ openvpn_openssl_source }}"
+    dest: "{{ openvpn_src_path }}"
+    remote_src: true
+
+- name: "configure openssl"
+  command: "./config --prefix={{ openvpn_openssl_prefix }} --openssldir={{ openvpn_openssl_openssldir }}"
+  args:
+    chdir: "{{ openvpn_src_path }}/openssl-{{ openvpn_openssl_version }}"
+
+- name: "build openssl"
+  make:
+    chdir: "{{ openvpn_src_path }}/openssl-{{ openvpn_openssl_version }}"
+
+- name: "test openssl"
+  make:
+    chdir: "{{ openvpn_src_path }}/openssl-{{ openvpn_openssl_version }}"
+    target: test
+
+- name: "install openssl"
+  make:
+    chdir: "{{ openvpn_src_path }}/openssl-{{ openvpn_openssl_version }}"
+    target: install
+
+- name: "cleanup (openssl)"
+  file:
+    path: "{{ openvpn_src_path }}/openssl-{{ openvpn_openssl_version }}"
+    state: absent

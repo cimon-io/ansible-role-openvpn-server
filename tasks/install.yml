@@ -1,0 +1,40 @@
+---
+- name: "get openvpn source"
+  unarchive:
+    src: "{{ openvpn_source }}"
+    dest: "{{ openvpn_src_path }}"
+    remote_src: true
+
+- name: "configure openvpn"
+  command: "./configure {{ openvpn_configure_args }}"
+  args:
+    creates: "{{ openvpn_src_path }}/openvpn-{{ openvpn_version }}/Makefile"
+    chdir: "{{ openvpn_src_path }}/openvpn-{{ openvpn_version }}"
+  environment: "{{ openvpn_configure_env }}"
+
+- name: "build openvpn"
+  make:
+    chdir: "{{ openvpn_src_path }}/openvpn-{{ openvpn_version }}"
+
+- name: "install openvpn"
+  make:
+    chdir: "{{ openvpn_src_path }}/openvpn-{{ openvpn_version }}"
+    target: install
+
+- name: "install easy-rsa"
+  git:
+    repo: "{{ openvpn_easyrsa_repo }}"
+    dest: "{{ openvpn_conf_path }}/easy-rsa"
+    version: "{{ openvpn_easyrsa_version }}"
+
+- name: "link systemd unit"
+  file:
+    src: "{{ openvpn_install_path }}/lib/systemd/system/openvpn-server@.service"
+    dest: "/etc/systemd/system/openvpn-server@.service"
+    state: link
+  when: ansible_service_mgr == "systemd"
+
+- name: "cleanup (openvpn)"
+  file:
+    path: "{{ openvpn_src_path }}/openvpn-{{ openvpn_version }}"
+    state: absent

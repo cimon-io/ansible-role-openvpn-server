@@ -1,0 +1,19 @@
+---
+- name: "install software required for openvpn"
+  apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: true
+    cache_valid_time: "{{ apt_cache_valid_time }}"
+  with_items: "{{ openvpn_requirements }}"
+  
+- name: "install openssl"
+  import_tasks: openssl.yml
+  when: openvpn_system_openssl == False
+  tags: [openvpn, openvpn-openssl, openvpn-install]
+
+- name: "install openvpn"
+  import_tasks: install.yml
+  tags: [openvpn, openvpn-install]
+
+- meta: flush_handlers

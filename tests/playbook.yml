@@ -1,0 +1,5 @@
+---
+- hosts: cimon-ansible
+  roles:
+    - role: ansible-role-openvpn-server
+      openvpn_system_openssl: False
