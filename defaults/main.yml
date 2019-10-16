@@ -27,4 +27,5 @@ openvpn_openssl_prefix: "/opt/openssl"
 openvpn_openssl_openssldir: "/opt/openssl/ssl"
 
 openvpn_easyrsa_version: "v3.0.6"
+openvpn_easyrsa_vars_file: ""
 openvpn_easyrsa_repo: "https://github.com/OpenVPN/easy-rsa.git"
