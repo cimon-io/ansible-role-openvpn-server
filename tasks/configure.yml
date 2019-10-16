@@ -1,0 +1,14 @@
+---
+- name: "create config directories"
+  file:
+    path: "{{ openvpn_conf_path }}/server"
+    state: directory
+    mode: '0755'
+
+- name: "copy config files"
+  copy:
+    src: "{{ item }}"
+    dest: "{{ openvpn_conf_path }}/server/"
+    force: true
+    mode: 0644
+  with_fileglob: "{{ openvpn_config_files }}"
