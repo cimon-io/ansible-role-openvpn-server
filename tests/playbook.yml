@@ -3,3 +3,5 @@
   roles:
     - role: ansible-role-openvpn-server
       openvpn_system_openssl: False
+      openvpn_configure_env:
+        CFLAGS: "-I{{ openvpn_openssl_prefix }}/include -Wl,-rpath={{ openvpn_openssl_prefix }}/lib -L{{ openvpn_openssl_prefix }}/lib"

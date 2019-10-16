@@ -6,7 +6,8 @@
     update_cache: true
     cache_valid_time: "{{ apt_cache_valid_time }}"
   with_items: "{{ openvpn_requirements }}"
-  
+  tags: [openvpn]
+
 - name: "install openssl"
   import_tasks: openssl.yml
   when: openvpn_system_openssl == False
@@ -16,4 +17,6 @@
   import_tasks: install.yml
   tags: [openvpn, openvpn-install]
 
-- meta: flush_handlers
+- name: "configure openvpn"
+  import_tasks: configure.yml
+  tags: [openvpn, openvpn-configure]
