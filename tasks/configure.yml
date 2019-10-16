@@ -12,3 +12,11 @@
     force: true
     mode: 0644
   with_fileglob: "{{ openvpn_config_files }}"
+
+- name: "copy easy-rsa vars file"
+  copy:
+    src: "{{ openvpn_easyrsa_vars_file }}"
+    dest: "{{ openvpn_conf_path }}/easy-rsa/easyrsa3/vars"
+    force: true
+    mode: 0644
+  when: openvpn_easyrsa_vars_file | length > 0
